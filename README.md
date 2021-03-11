@@ -1,6 +1,6 @@
 # gounwind
 
-gounwind is a tiny Go library that acts as a drop-in replacement for [`runtime.Callers()`](https://golang.org/pkg/runtime/#Callers). It's highly experimental and probably only works on x86-64. Do not use it in production.
+gounwind is a tiny Go library that acts as a drop-in replacement for [`runtime.Callers()`](https://golang.org/pkg/runtime/#Callers). It exists to show how simple and fast stack unwinding can theoretically be when using frame pointers.
 
 Compared to `runtime.Callers()`, gounwind is:
 
