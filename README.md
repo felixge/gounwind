@@ -25,3 +25,7 @@ BenchmarkUnwind/runtime-12         	1281306	      934.7 ns/op
 BenchmarkUnwind/gounwind
 BenchmarkUnwind/gounwind-12        	65443237	       17.69 ns/op
 ```
+
+## More Information
+
+The [The Go low-level calling convention on x86-64](https://dr-knz.net/go-calling-convention-x86-64.html) article as well as [this video](https://www.youtube.com/watch?v=PrDsGldP1Q0) were incredibly useful to me while trying to figure this out.
