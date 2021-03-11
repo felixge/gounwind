@@ -1,17 +1,17 @@
 package gounwind
 
 import (
+	"reflect"
 	"runtime"
 	"testing"
 )
 
 func TestCallers(t *testing.T) {
-	for _, m := range []method{runtimeCallers, gounwindCallers} {
-		t.Run(string(m), func(t *testing.T) {
-			for _, fn := range resolvePCs(testCallers(m)) {
-				t.Logf("%s", fn)
-			}
-		})
+	want := funcNames(testCallers(runtimeCallers))
+	got := funcNames(testCallers(gounwindCallers))
+
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("\n got=%v\nwant=%v\n", got, want)
 	}
 }
 
@@ -51,7 +51,7 @@ const (
 	gounwindCallers method = "gounwind"
 )
 
-func resolvePCs(pcs []uintptr) []string {
+func funcNames(pcs []uintptr) []string {
 	fns := make([]string, 0, len(pcs))
 	frames := runtime.CallersFrames(pcs)
 	for {
