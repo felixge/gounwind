@@ -4,7 +4,7 @@ gounwind is a tiny Go library that acts as a drop-in replacement for [`runtime.C
 
 Compared to `runtime.Callers()`, gounwind is:
 
-- 55x faster
+- ~50 faster
 - [~25 lines of code](./unwind.go) vs [thousands](https://github.com/golang/go/blob/go1.16.2/src/runtime/traceback.go#L76-L559)
 - Totally unsafe for production use
 - Unable to recognize inlined functions
