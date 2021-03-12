@@ -6,7 +6,8 @@ import (
 
 //go:noinline
 
-// Callers is cool
+// Callers is a drop-in replacement for runtime.Callers that uses frame
+// pointers for fast and simple stack unwinding.
 func Callers(skip int, pcs []uintptr) int {
 	return callers(skip, pcs)
 }
