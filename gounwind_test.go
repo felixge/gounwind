@@ -7,12 +7,21 @@ import (
 )
 
 func TestCallers(t *testing.T) {
-	want := funcNames(testCallers(runtimeCallers))
-	got := funcNames(testCallers(gounwindCallers))
+	t.Run("frame pointers", func(t *testing.T) {
+		want := funcNames(testCallers(runtimeCallers))
+		got := funcNames(testCallers(gounwindCallers))
+		if !reflect.DeepEqual(got, want) {
+			t.Fatalf("\n got=%v\nwant=%v\n", got, want)
+		}
+	})
 
-	if !reflect.DeepEqual(got, want) {
-		t.Fatalf("\n got=%v\nwant=%v\n", got, want)
-	}
+	t.Run("dwarf", func(t *testing.T) {
+		want := funcNames(testCallers(runtimeCallers))
+		got := funcNames(testCallers(dwarfCallers))
+		if !reflect.DeepEqual(got, want) {
+			t.Fatalf("\n got=%v\nwant=%v\n", got, want)
+		}
+	})
 }
 
 func BenchmarkUnwind(b *testing.B) {
@@ -49,6 +58,7 @@ type method string
 const (
 	runtimeCallers  method = "runtime"
 	gounwindCallers method = "gounwind"
+	dwarfCallers    method = "dwarf"
 )
 
 func funcNames(pcs []uintptr) []string {
@@ -82,6 +92,8 @@ func testCallersB(m method, i, j int) []uintptr {
 		return pcs[0:runtime.Callers(1, pcs)]
 	case gounwindCallers:
 		return pcs[0:Callers(1, pcs)]
+	case dwarfCallers:
+		return pcs[0:DWARFCallers(1, pcs)]
 	}
 	panic("unreachable")
 }
