@@ -15,17 +15,17 @@ func Callers(skip int, pcs []uintptr) int {
 //go:noinline
 //go:nosplit
 func callers(skip int, pcs []uintptr) int {
-	fp := uintptr(unsafe.Pointer(&skip)) - 16
+	fp := regfp()
 	i := 0
 	for i < len(pcs) {
-		pc := deref(fp + 8)
+		pc := *(*uintptr)(unsafe.Pointer(fp + 8))
 		if skip == 0 {
 			pcs[i] = pc
 			i++
 		} else {
 			skip--
 		}
-		fp = deref(fp)
+		fp = *(*uintptr)(unsafe.Pointer(fp))
 		if fp == 0 {
 			break
 		}
@@ -33,7 +33,5 @@ func callers(skip int, pcs []uintptr) int {
 	return i
 }
 
-//go:nosplit
-func deref(addr uintptr) uintptr {
-	return *(*uintptr)(unsafe.Pointer(addr))
-}
+// regfp returns the frame pointer addr in the callers frame by
+func regfp() uintptr
