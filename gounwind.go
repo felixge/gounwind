@@ -15,22 +15,26 @@ func Callers(skip int, pcs []uintptr) int {
 //go:noinline
 //go:nosplit
 func callers(skip int, pcs []uintptr) int {
-	fp := regfp()
 	i := 0
+	frame := (*frame)(unsafe.Pointer(regfp()))
 	for i < len(pcs) {
-		pc := *(*uintptr)(unsafe.Pointer(fp + 8))
 		if skip == 0 {
-			pcs[i] = pc
+			pcs[i] = frame.retpc
 			i++
 		} else {
 			skip--
 		}
-		fp = *(*uintptr)(unsafe.Pointer(fp))
-		if fp == 0 {
+		if frame.pointer == nil {
 			break
 		}
+		frame = frame.pointer
 	}
 	return i
+}
+
+type frame struct {
+	pointer *frame
+	retpc   uintptr
 }
 
 // regfp returns the frame pointer addr in the callers frame by
